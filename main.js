@@ -10025,19 +10025,20 @@ const Numbers = {
 }
 
 const Display = {
-  element: document.querySelector('[data-username]'),
+  $display: document.querySelector('[data-username]'),
+  $msg: document.querySelector('[data-copied]'),
+  init() {
+    this.$msg.addEventListener('animationend', _ => this.$msg.removeAttribute('style'))
+  },
   set(user) {
     if (Settings.isCapitalized) user = Utils.capitalizeWord(user)
-    this.element.textContent = user
+    this.$display.textContent = user
   },
   get() {
-    return this.element.textContent
+    return this.$display.textContent
   },
   copied() {
-    const msg = document.querySelector('[data-copied]')
-    console.log(msg)
-    msg.style.display = 'grid'
-    msg.addEventListener('animationend', _ => msg.removeAttribute('style'))
+    this.$msg.style.display = 'grid'
   },
 }
 
@@ -10055,9 +10056,9 @@ const Utils = {
 }
 
 const Generate = {
-  element: document.querySelector('[data-generate]'),
+  $: document.querySelector('[data-generate]'),
   init() {
-    this.element.addEventListener('click', this.handle)
+    this.$.addEventListener('click', this.handle)
     this.handle()
   },
   handle() {
@@ -10066,9 +10067,9 @@ const Generate = {
 }
 
 const Copy = {
-  element: document.querySelector('[data-copy]'),
+  $: document.querySelector('[data-copy]'),
   init() {
-    this.element.addEventListener('click', this.handle)
+    this.$.addEventListener('click', this.handle)
   },
   handle() {
     Utils.copyToClipboard(Display.get())
@@ -10094,6 +10095,7 @@ const Settings = {
   },
 }
 
+Display.init()
 Settings.init()
 Generate.init()
 Copy.init()
