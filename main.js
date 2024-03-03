@@ -5,6 +5,87 @@ const Username = {
   },
 }
 
+const Numbers = {
+  get(length) {
+    let n = ''
+    for (let i = 0; i < length; i++) {
+      n += Math.floor(Math.random() * 10)
+    }
+    return n
+  },
+}
+
+const Display = {
+  $display: document.querySelector('[data-username]'),
+  $msg: document.querySelector('[data-copied]'),
+  init() {
+    this.$msg.addEventListener('animationend', _ => this.$msg.removeAttribute('style'))
+  },
+  set(user) {
+    if (Settings.isCapitalized) user = Utils.capitalizeWord(user)
+    this.$display.textContent = user
+  },
+  get() {
+    return this.$display.textContent
+  },
+  copied() {
+    this.$msg.style.display = 'grid'
+  },
+}
+
+const Utils = {
+  capitalizeWord(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1)
+  },
+  async copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text)
+    } catch (err) {
+      console.error('copy failed', err)
+    }
+  },
+}
+
+const Generate = {
+  $: document.querySelector('[data-generate]'),
+  init() {
+    this.$.addEventListener('click', this.handle)
+    this.handle()
+  },
+  handle() {
+    Display.set(Username.getNew(4))
+  },
+}
+
+const Copy = {
+  $: document.querySelector('[data-copy]'),
+  init() {
+    this.$.addEventListener('click', this.handle)
+  },
+  handle() {
+    Utils.copyToClipboard(Display.get())
+    Display.copied()
+  },
+}
+
+const Settings = {
+  isCapitalized: true,
+  hasNumber: true,
+  $capitalize: document.getElementById('capitalize'),
+  $number: document.getElementById('number'),
+  init() {
+    this.hasNumber = this.$number.checked
+    this.isCapitalized = this.$capitalize.checked
+    this.$number.addEventListener('change', this.update)
+    this.$capitalize.addEventListener('change', this.update)
+  },
+  update: e => {
+    if (e.target.id === 'number') Settings.hasNumber = e.target.checked
+    if (e.target.id === 'capitalize') Settings.isCapitalized = e.target.checked
+    Display.set(Username.getNew(4))
+  },
+}
+
 const Words = {
   list: [
     'a',
@@ -10011,87 +10092,6 @@ const Words = {
   get() {
     const index = Math.floor(Math.random() * this.list.length)
     return this.list[index]
-  },
-}
-
-const Numbers = {
-  get(length) {
-    let n = ''
-    for (let i = 0; i < length; i++) {
-      n += Math.floor(Math.random() * 10)
-    }
-    return n
-  },
-}
-
-const Display = {
-  $display: document.querySelector('[data-username]'),
-  $msg: document.querySelector('[data-copied]'),
-  init() {
-    this.$msg.addEventListener('animationend', _ => this.$msg.removeAttribute('style'))
-  },
-  set(user) {
-    if (Settings.isCapitalized) user = Utils.capitalizeWord(user)
-    this.$display.textContent = user
-  },
-  get() {
-    return this.$display.textContent
-  },
-  copied() {
-    this.$msg.style.display = 'grid'
-  },
-}
-
-const Utils = {
-  capitalizeWord(word) {
-    return word.charAt(0).toUpperCase() + word.slice(1)
-  },
-  async copyToClipboard(text) {
-    try {
-      await navigator.clipboard.writeText(text)
-    } catch (err) {
-      console.error('copy failed', err)
-    }
-  },
-}
-
-const Generate = {
-  $: document.querySelector('[data-generate]'),
-  init() {
-    this.$.addEventListener('click', this.handle)
-    this.handle()
-  },
-  handle() {
-    Display.set(Username.getNew(4))
-  },
-}
-
-const Copy = {
-  $: document.querySelector('[data-copy]'),
-  init() {
-    this.$.addEventListener('click', this.handle)
-  },
-  handle() {
-    Utils.copyToClipboard(Display.get())
-    Display.copied()
-  },
-}
-
-const Settings = {
-  isCapitalized: true,
-  hasNumber: true,
-  $capitalize: document.getElementById('capitalize'),
-  $number: document.getElementById('number'),
-  init() {
-    this.hasNumber = this.$number.checked
-    this.isCapitalized = this.$capitalize.checked
-    this.$number.addEventListener('change', this.update)
-    this.$capitalize.addEventListener('change', this.update)
-  },
-  update: e => {
-    if (e.target.id === 'number') Settings.hasNumber = e.target.checked
-    if (e.target.id === 'capitalize') Settings.isCapitalized = e.target.checked
-    Display.set(Username.getNew(4))
   },
 }
 
