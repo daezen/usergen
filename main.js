@@ -1,7 +1,11 @@
 const Username = {
+  history: [],
   getNew(length) {
     if (!Settings.hasNumber) return `${Words.get()}`
-    return `${Words.get()}${Numbers.get(length)}`
+    let username
+    username = `${Words.get()}${Numbers.get(length)}`
+    this.history.push(username)
+    return username
   },
 }
 
@@ -19,7 +23,9 @@ const Display = {
   $display: document.querySelector('[data-username]'),
   $msg: document.querySelector('[data-copied]'),
   init() {
-    this.$msg.addEventListener('animationend', _ => this.$msg.removeAttribute('style'))
+    this.$msg.addEventListener('animationend', _ =>
+      this.$msg.removeAttribute('style'),
+    )
   },
   set(user) {
     if (Settings.isCapitalized) user = Utils.capitalizeWord(user)
